@@ -148,7 +148,6 @@ export async function openPDFFiles(url) {
     }
 
     isActivityInProgress = true;
-    let url = "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf";
 
     const f2 = url.split("/");
     const fileName = f2[f2.length - 1];

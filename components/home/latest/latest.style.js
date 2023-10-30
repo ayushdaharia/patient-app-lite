@@ -4,7 +4,7 @@ import { FONT, SIZES, COLORS } from "../../../constants";
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: SIZES.xSmall,
+    // marginTop: SIZES.xSmall,
   },
   headerTitle: {
     fontSize: SIZES.large,
@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
   },
   bannerContainer: {
-    marginTop: SIZES.small,
+    // marginTop: SIZES.small,
   },
   banner: {
     width: "100%",

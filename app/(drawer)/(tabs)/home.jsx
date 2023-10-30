@@ -1,7 +1,7 @@
 import { Alert, BackHandler, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useContext, useState } from "react";
 import { Stack, useRouter } from "expo-router";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused, DrawerActions, useNavigation } from "@react-navigation/native";
 import { COLORS, SIZES, icons, images } from "../../../constants";
 import { EmergencyServices, Latest, OtherServices, ScreenHeaderBtn } from "../../../components";
 import { DrawerToggleButton } from "@react-navigation/drawer";
@@ -74,13 +74,28 @@ const Home = () => {
     };
   }, [isFocused]);
 
+  const navigation = useNavigation();
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#FFF" }}>
       <Stack.Screen
         options={{
           headerStyle: { backgroundColor: COLORS.lightWhite },
           headerShadowVisible: false,
-          headerLeft: () => <DrawerToggleButton hamburger={true} />,
+          headerLeft: () => (
+            <View
+              style={{
+                paddingLeft: SIZES.medium,
+              }}>
+              <ScreenHeaderBtn
+                iconUrl={icons.hamburger2}
+                dimension={50}
+                handlePress={() => {
+                  navigation.dispatch(DrawerActions.toggleDrawer());
+                }}
+              />
+            </View>
+          ),
           headerRight: () => (
             <View
               style={{
@@ -98,7 +113,7 @@ const Home = () => {
       />
       <View
         style={{
-          paddingHorizontal: normalize(10),
+          paddingHorizontal: normalize(20),
           flexDirection: "row",
         }}>
         <Text
@@ -108,7 +123,7 @@ const Home = () => {
             fontSize: 13,
             lineHeight: 20,
             color: "#404040",
-          }}>{`GoodMorning, `}</Text>
+          }}>{`Good Morning, `}</Text>
         <Text
           style={{
             fontStyle: "normal",
