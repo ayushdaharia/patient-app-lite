@@ -120,7 +120,7 @@
 
 // export default CustomDropdown;
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { View, Text, TouchableOpacity, Image, TextInput, Modal, FlatList } from "react-native";
 import PropTypes from "prop-types";
 import { COLORS, FONT, SIZES, icons } from "../../../constants";
@@ -136,6 +136,9 @@ const CustomDropdown = ({
   color,
   selectedItemColor,
   headingColor,
+  propertyName,
+  formValues,
+  borderColor,
 }) => {
   const [search, setSearch] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
@@ -155,6 +158,10 @@ const CustomDropdown = ({
     }
   };
 
+  useEffect(() => {
+    setSelectedItem(formValues[propertyName]);
+  }, [formValues]);
+
   return (
     <View style={{ flex: 1 }}>
       <Text style={{ color: headingColor ? headingColor : null }}>{heading}</Text>
@@ -163,7 +170,8 @@ const CustomDropdown = ({
           width: "100%",
           height: height ? height : 40,
           borderRadius: borderRadius ? borderRadius : 10,
-          borderWidth: 0.5,
+          borderColor: borderColor,
+          borderWidth: 1,
           alignSelf: "center",
           flexDirection: "row",
           justifyContent: "space-between",

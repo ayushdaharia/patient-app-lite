@@ -10,6 +10,7 @@ import {
   Pressable,
   Alert,
   ToastAndroid,
+  TextInput,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as DocumentPicker from "expo-document-picker";
@@ -20,13 +21,54 @@ import { saveData } from "../../../global/services/apis/postApi";
 import { colors, fontFamily } from "../../../constants/themeOld";
 import { normalize } from "../../../global/utils/dimensions";
 import NewCustomTextInput from "../../../components/formFields/newCustomTextInput";
-import { icons, images } from "../../../constants";
+import { COLORS, SIZES, icons, images } from "../../../constants";
 import Dropdown from "../../../components/formFields/dropDown";
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import { ContextPrimary } from "../../../global/context/context";
 import ButtonCustom from "../../../components/formFields/buttonCustom";
 import CustomDropdown from "../../../components/common/dropDown/CustomDropdown";
 import CustomDate from "../../../components/common/date/CustomDate";
+
+const CustomTextField = ({ heading, placeHolder, value, onChangeText, width, unit, type }) => {
+  return (
+    <View style={{ flex: 1 }}>
+      <Text>{heading}</Text>
+      <View
+        style={{
+          width: width,
+          flexDirection: "row",
+          alignItems: "center",
+          borderColor: COLORS.gray,
+          borderWidth: 1,
+          borderRadius: 10,
+          marginVertical: 5,
+        }}>
+        {type === "mobile" ? (
+          <View style={{ flexDirection: "row" }}>
+            <Image source={images.flag} style={{ width: 30, height: 20, marginHorizontal: 10 }} />
+            <View style={{ borderRightWidth: 0.5, height: 20, borderColor: COLORS.gray }}></View>
+          </View>
+        ) : null}
+
+        <TextInput
+          placeholder={placeHolder}
+          placeholderTextColor={COLORS.gray}
+          style={{
+            height: 40,
+            padding: 10,
+
+            flex: 1,
+          }}
+          value={value}
+          onChangeText={onChangeText}
+          keyboardType={type === "mobile" ? "numeric" : "default"} // Set keyboardType to numeric for mobile type
+          maxLength={type === "mobile" ? 10 : undefined} // Set maxLength to 10 for mobile type
+        />
+        <Text style={{ fontSize: SIZES.small, paddingRight: 10 }}>{unit}</Text>
+      </View>
+    </View>
+  );
+};
 
 const EditProfile = () => {
   const router = useRouter();
@@ -46,6 +88,14 @@ const EditProfile = () => {
     avatarUrl,
     patientId,
   } = params;
+
+  const [isValidEmail, setIsValidEmail] = useState(true); // State to track email validation
+
+  const validateEmail = (email) => {
+    // Regular expression to validate email addresses
+    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+    return email === "" || emailRegex.test(email);
+  };
 
   const [formValues, setFormValues] = useState({
     date: dateOfBirth !== "" ? dateOfBirth : "",
@@ -67,7 +117,7 @@ const EditProfile = () => {
 
   const marriageStatus = [{ title1: "MARRIED" }, { title1: "UNMARRIED" }];
   const Status = [{ value: "MARRIED" }, { value: "UNMARRIED" }];
-  const { changeImg } = useContext(ContextPrimary);
+  const { changeImg, changeName } = useContext(ContextPrimary);
 
   const uploadFile = async (imageUri) => {
     if (!imageUri) {
@@ -85,10 +135,12 @@ const EditProfile = () => {
     };
     formData.append("file", file);
 
+    const url = BASE_URL_C + "patient/profilePic/upload?userId=" + userId;
+    console.log({ url1111: url });
     try {
       const response = await axios({
         method: "post",
-        url: BASE_URL_C + "patient/profilePic/upload?userId=" + userId,
+        url: url,
         data: formData,
         headers: {
           "Content-Type": "multipart/form-data",
@@ -98,9 +150,8 @@ const EditProfile = () => {
 
       const result = await response.data;
       await AsyncStorage.setItem("AVATAR_URL", result.imageURL);
-
       setImageSrc(result.imageURL);
-
+      changeImg;
       Alert.alert("Alert", "Successfully Uploaded");
       console.log({ image_upload: result });
     } catch (error) {
@@ -140,7 +191,7 @@ const EditProfile = () => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [3, 4],
-      quality: 1,
+      quality: 0,
     });
     if (!result.canceled) {
       const selectedImage = result.assets[0].uri;
@@ -164,7 +215,7 @@ const EditProfile = () => {
               const image = await ImagePicker.launchCameraAsync({
                 allowsEditing: true,
                 aspect: [3, 4],
-                quality: 1,
+                quality: 0,
               });
 
               if (!image.canceled) {
@@ -211,7 +262,6 @@ const EditProfile = () => {
     } else {
       const url = BASE_URL_C + "patient/userId";
       const userId = await AsyncStorage.getItem("USER_ID");
-      // console.log("my userid", userId);
 
       const payload = {
         imageURL: imageSrc,
@@ -228,7 +278,7 @@ const EditProfile = () => {
         email: formValues.email,
         maritalStatus: formValues.maritalStatus,
       };
-      // console.log("payload", payload);
+      console.log(payload);
       submitHandler(url, payload);
     }
   };
@@ -306,10 +356,6 @@ const EditProfile = () => {
     },
   });
 
-  // console.log({ formValues: formValues });
-  const handlePress = () => {
-    setOpenDate(true);
-  };
   const GenderList = [{ title1: "MALE" }, { title1: "FEMALE" }, { title1: "OTHER" }];
 
   const handleMarriageStatusSelect = (selectedItem) => {
@@ -350,330 +396,92 @@ const EditProfile = () => {
             marginTop: normalize(22),
             paddingHorizontal: normalize(11),
           }}>
-          <NewCustomTextInput
-            label="Name"
-            placeholder="Enter name"
+          <CustomTextField
+            heading="Name"
+            width={"100%"}
+            placeHolder="Enter Name"
             value={formValues.name}
-            onChangeText={(text) => {
-              setFormValues({ ...formValues, name: text });
-            }}
+            onChangeText={(text) => setFormValues({ ...formValues, name: text })}
           />
 
-          <View style={{ flexDirection: "row", gap: 10, marginTop: normalize(17) }}>
+          <View style={{ flexDirection: "row", gap: 10 }}>
             <CustomDate
               heading="Date of Birth"
               formValues={formValues} // Use formValues, not date
               setFormValues={setFormValues}
               propertyName="date" // Specify the property name
-              borderRadius={5}
-              height={44}
-              headingColor="#777777"
             />
             <CustomDropdown
               heading="Sender Select"
               data={GenderList}
+              formValues={formValues}
               onSelect={handleGenderSelect}
               placeholder="Select Gender"
-              borderRadius={5}
-              height={44}
-              color={"#127DDD"}
-              selectedItemColor={"#777777"}
-              headingColor={"#777777"}
+              borderColor={"#777777"}
+              propertyName="gender"
             />
           </View>
-
-          {/* 
-          <View
-            style={{
-              flexDirection: "row",
-              marginTop: normalize(17),
-              width: "100%",
-              justifyContent: "space-between",
-            }}>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                // marginRight: normalize(36),
-              }}>
-              <View style={{ marginRight: normalize(36) }}>
-                <Text style={{ color: "#777777" }}>Date of Birth</Text>
-                <Pressable
-                  onPress={handlePress}
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    borderWidth: 0.5,
-                    paddingVertical: normalize(6),
-                    paddingHorizontal: normalize(9),
-                    marginTop: normalize(6),
-                    borderRadius: 5,
-                    width: normalize(154),
-                  }}>
-                  <DatePicker
-                    modal
-                    open={openDate}
-                    onConfirm={(date) => {
-                      setOpenDate(false);
-                      let newdate = moment(date).format("YYYY-MM-DD");
-                      // console.log("dddd", date);
-                      setFormValues({ ...formValues, date: newdate });
-                      // formValues["date"] = date;
-                    }}
-                    onCancel={() => {
-                      setOpenDate(false);
-                    }}
-                    textColor="#208F94"
-                    androidVariant="nativeAndroid"
-                    mode={"date"}
-                    date={new Date()}
-                    // isVisible={datePickerVisible}
-                  />
-                  <Text style={{ color: "#777777" }}>{formValues?.date}</Text>
-                  <Image
-                    style={{
-                      height: normalize(30),
-                      width: normalize(30),
-                      tintColor: "#404040",
-                      marginLeft: normalize(30),
-                    }}
-                    source={icons.calendarBlue}
-                  />
-                </Pressable>
-              </View>
-              <View>
-               <Text style={{ color: "#777777" }}>Gender</Text> 
-                 <Dropdown
-                  options={GenderList}
-                  selectedOption={formValues.gender}
-                  onOptionSelect={(gender) => {
-                    setFormValues({ ...formValues, gender });
-                  }}
-                  defaultOption="Select Gender"
-                  ContainerStyle={{
-                    width: normalize(160),
-                    borderColor: "#404040",
-                    borderWidth: 0.5,
-                    borderRadius: 5,
-                    // marginTop: normalize(24),
-                    marginTop: normalize(6),
-                    height: normalize(42),
-                    paddingHorizontal: normalize(10),
-                    // paddingVertical:normalize(6)
-                  }}
-                  textStyles={{
-                    color: "#777777",
-                    fontSize: 14,
-                    fontWeight: "400",
-                  }}
-                /> 
-               
-              </View>
-            </View>
-          </View>
-             */}
-
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              marginTop: normalize(17),
-            }}>
-            <NewCustomTextInput
-              label="Weight"
-              placeholder="Enter weight"
+          <View style={{ flexDirection: "row", gap: 10 }}>
+            <CustomTextField
+              heading="Weight"
+              placeHolder="Enter Weight"
               value={formValues.weight}
-              keyboardType="numeric"
-              maxLength={3}
-              inputStyle={{ width: normalize(154) }}
-              onChangeText={(weight) => {
-                setFormValues({ ...formValues, weight });
-              }}
-              right={() => (
-                <View
-                  style={{
-                    borderLeftWidth: 0.5,
-                    alignSelf: "center",
-                    height: normalize(30),
-                    marginLeft: normalize(15),
-                    borderLeftColor: "#404040",
-                  }}>
-                  <Text
-                    style={{
-                      color: "black",
-                      textAlign: "center",
-                      marginTop: normalize(4),
-                      marginHorizontal: normalize(15),
-                    }}>
-                    kg
-                  </Text>
-                </View>
-              )}
+              onChangeText={(text) => setFormValues({ ...formValues, weight: text })}
+              unit="cm"
             />
-            {/* <View> */}
-            <NewCustomTextInput
-              label="Height"
-              placeholder="ENter Height"
+            <CustomTextField
+              heading="Height"
+              placeHolder="Enter Height"
               value={formValues.height}
-              keyboardType="numeric"
-              maxLength={3}
-              inputStyle={{ width: normalize(160) }}
-              onChangeText={(height) => {
-                setFormValues({ ...formValues, height });
-              }}
-              right={() => (
-                <View
-                  style={{
-                    borderLeftWidth: 0.5,
-                    alignSelf: "center",
-                    height: normalize(30),
-                    marginLeft: normalize(20),
-                    borderLeftColor: "#404040",
-                  }}>
-                  <Text
-                    style={{
-                      color: "black",
-                      textAlign: "center",
-                      marginTop: normalize(4),
-                      marginHorizontal: normalize(15),
-                    }}>
-                    cm
-                  </Text>
-                </View>
-              )}
-            />
-          </View>
-          <View
-            style={{
-              marginTop: normalize(17),
-            }}>
-            <NewCustomTextInput
-              label="Phone Number"
-              placeholder="Enter Phone Number"
-              value={formValues.mobile}
-              onChangeText={(mobile) => {
-                setFormValues({ ...formValues, mobile });
-              }}
-              keyboardType="numeric"
-              maxLength={10}
-              editable={false}
-              inputStyle={{ paddingHorizontal: 35 }}
-              left={() => (
-                <View
-                  style={{
-                    alignSelf: "center",
-                  }}>
-                  <Image
-                    style={{
-                      height: normalize(30),
-                      width: normalize(30),
-                      marginHorizontal: normalize(5),
-                    }}
-                    source={images.flag}
-                  />
-                </View>
-              )}
+              onChangeText={(text) => setFormValues({ ...formValues, height: text })}
+              unit="kg"
             />
           </View>
 
-          <View
-            style={{
-              marginTop: normalize(17),
-              // marginHorizontal: normalize(11),
-            }}>
-            <NewCustomTextInput
-              name="EmergencyNumber"
-              label="Emgergency contact"
-              placeholder="Enter emgergency contact"
-              value={formValues.emergencyMobile}
-              onChangeText={(emergencyMobile) => {
-                setFormValues({ ...formValues, emergencyMobile });
-              }}
-              keyboardType="numeric"
-              maxLength={10}
-              inputStyle={{ paddingHorizontal: 35 }}
-              left={() => (
-                <View
-                  style={{
-                    alignSelf: "center",
-                  }}>
-                  <Image
-                    style={{
-                      height: normalize(30),
-                      width: normalize(30),
-                      marginHorizontal: normalize(5),
-                    }}
-                    source={images.flag}
-                  />
-                </View>
-              )}
-            />
-          </View>
-          <View style={{ marginTop: normalize(17) }}>
-            <NewCustomTextInput
-              label="Email"
-              placeholder="Enter email"
-              value={formValues.email}
-              onChangeText={(email) => {
-                setFormValues({ ...formValues, email: email });
-              }}
-            />
-          </View>
-          {/* <Text style={{ marginTop: normalize(17), color: "#777777" }}>Marital Status</Text>
-          <Dropdown
-            options={Status}
-            defaultOption={
-              formValues?.maritalStatus !== "" ? formValues?.maritalStatus : "Martial Status"
-            }
-            selectedOption={formValues.maritalStatus}
-            onOptionSelect={(maritalStatus) => {
-              setFormValues({ ...formValues, maritalStatus });
-            }}
-            // editable={true}
-            ContainerStyle={{
-              // width: normalize(160),
-              width: "100%",
-              borderColor: "#404040",
-              borderWidth: 0.5,
-              borderRadius: 5,
-              // marginTop: normalize(24),
-              marginTop: normalize(6),
-              height: normalize(42),
-              paddingHorizontal: normalize(10),
-              // paddingVertical:normalize(6)
-            }}
-            textStyles={{
-              color: "#777777",
-              fontSize: 14,
-              fontWeight: "400",
-            }}
-          /> */}
+          <CustomTextField
+            type="mobile"
+            heading="Phone Number"
+            placeHolder="Enter Phone Number"
+            value={formValues.mobile}
+            onChangeText={(text) => setFormValues({ ...formValues, mobile: text })}
+          />
 
-          <View style={{ marginTop: normalize(17) }}>
-            <CustomDropdown
-              heading="Marital Status"
-              data={marriageStatus}
-              onSelect={handleMarriageStatusSelect}
-              placeholder="Select Status"
-              borderRadius={5}
-              height={44}
-              color={"#127DDD"}
-              selectedItemColor={"#777777"}
-              headingColor={"#777777"}
-            />
-          </View>
+          <CustomTextField
+            type="mobile"
+            heading="Emergency Contact Number"
+            placeHolder="Emergency Contact Number"
+            value={formValues.emergencyMobile}
+            onChangeText={(text) => setFormValues({ ...formValues, emergencyMobile: text })}
+          />
 
-          <View style={{ marginTop: normalize(17) }}>
-            <NewCustomTextInput
-              label="Location"
-              placeholder="Enter Location"
-              value={formValues.location}
-              onChangeText={(text) => {
-                setFormValues({ ...formValues, location: text });
-              }}
-            />
-          </View>
+          <CustomTextField
+            heading="Email"
+            placeHolder="Enter email"
+            value={formValues.email}
+            onChangeText={(text) => {
+              setFormValues({ ...formValues, email: text });
+              setIsValidEmail(validateEmail(text));
+            }}
+          />
+          {!isValidEmail && (
+            <Text style={{ color: "red" }}>Please enter a valid email address</Text>
+          )}
+
+          <CustomDropdown
+            heading="Marital Status"
+            data={marriageStatus}
+            formValues={formValues}
+            onSelect={handleMarriageStatusSelect}
+            placeholder="Select Status"
+            borderColor={"#777777"}
+            propertyName="maritalStatus"
+          />
+          <CustomTextField
+            heading="Location"
+            placeHolder="Enter location"
+            value={formValues.location}
+            onChangeText={(text) => setFormValues({ ...formValues, location: text })}
+          />
         </View>
         <ButtonCustom
           label="Save Profile"

@@ -83,10 +83,12 @@ const MyProfile = ({ patientId }) => {
 
   const fetchUserData = async () => {
     const userId = await AsyncStorage.getItem("USER_ID");
+    const mobile = await AsyncStorage.getItem("MOBILE_NO");
     console.log("userid", userId);
     console.log("MOB", mobile);
 
     const url = BASE_URL_C + `patient/userId/${userId}?mobile=${mobile}`;
+    console.log({ irll111: url });
     const data = await getData(url);
     console.log("fetchDisplayName called with userId:", userId);
     console.log("data received from API:", data);
@@ -230,17 +232,6 @@ const MyProfile = ({ patientId }) => {
             <Image source={icons.camera} style={styles.backgroundImage} />
           )}
         </View>
-        {/* <View
-          style={{
-            marginLeft: 60,
-            marginTop: -15,
-            backgroundColor: "#fff",
-            borderRadius: 50,
-          }}>
-          <Pressable style={styles.editButton} onPress={() => captureImage()}>
-            <Image source={icons.edit} style={{ width: 20, height: 20, tintColor: "white" }} />
-          </Pressable>
-        </View> */}
       </View>
 
       <ScrollView style={{ flex: 1, marginTop: normalize(37) }}>
@@ -251,7 +242,6 @@ const MyProfile = ({ patientId }) => {
             justifyContent: "space-between",
             paddingHorizontal: 15,
             paddingVertical: 12,
-
             alignContent: "center",
           }}>
           <Text
@@ -260,7 +250,6 @@ const MyProfile = ({ patientId }) => {
               fontSize: 16,
               lineHeight: 19,
               color: "#B3B3B3",
-              // color:colors.primary
             }}>
             Name
           </Text>
@@ -272,7 +261,7 @@ const MyProfile = ({ patientId }) => {
               color: colors.primary,
               fontWeight: "bold",
             }}>
-            {name !== null ? name : "N/A"}
+            {name || "N/A"}
           </Text>
         </View>
         <View style={styles.simpleline}></View>
@@ -299,10 +288,10 @@ const MyProfile = ({ patientId }) => {
             style={{
               fontSize: 18,
               lineHeight: 19,
-              color: colors.primary,
+              color: mobile ? colors.primary : "#B3B3B3",
               fontWeight: "bold",
             }}>
-            {mobile !== null || mobile == "" ? mobile : "N/A"}
+            {mobile || "N/A"}
           </Text>
         </View>
         <View style={styles.simpleline}></View>
@@ -324,19 +313,13 @@ const MyProfile = ({ patientId }) => {
             Email Id
           </Text>
           <Text
-            style={
-              email === null || email === ""
-                ? {
-                    color: "#B3B3B3",
-                  }
-                : {
-                    fontSize: 18,
-                    lineHeight: 19,
-                    color: colors.primary,
-                    fontWeight: "bold",
-                  }
-            }>
-            {email === null || email === "" ? "N/A" : email}
+            style={{
+              fontSize: 18,
+              lineHeight: 19,
+              color: email ? colors.primary : "#B3B3B3",
+              fontWeight: "bold",
+            }}>
+            {email || "N/A"}
           </Text>
         </View>
         <View style={styles.simpleline}></View>
@@ -347,7 +330,6 @@ const MyProfile = ({ patientId }) => {
             paddingHorizontal: 15,
             paddingVertical: 12,
             alignItems: "center",
-            // paddingTop: 15,
           }}>
           <Text
             style={{
@@ -363,10 +345,10 @@ const MyProfile = ({ patientId }) => {
             style={{
               fontSize: 18,
               lineHeight: 19,
-              color: colors.primary,
-              fontWeight: "600",
+              color: gender ? colors.primary : "#B3B3B3",
+              fontWeight: "bold",
             }}>
-            {gender !== null || gender == "" ? gender : "N/A"}
+            {gender || "N/A"}
           </Text>
         </View>
         <View style={styles.simpleline}></View>
@@ -384,8 +366,6 @@ const MyProfile = ({ patientId }) => {
               fontSize: 16,
               lineHeight: 19,
               color: "#B3B3B3",
-              // color:colors.primary
-              // backgroundColor:'red'
             }}>
             Date of Birth
           </Text>
@@ -393,11 +373,10 @@ const MyProfile = ({ patientId }) => {
             style={{
               fontSize: 18,
               lineHeight: 19,
-              color: colors.primary,
+              color: dateOfBirth ? colors.primary : "#B3B3B3",
               fontWeight: "bold",
-              // backgroundColor:'red'
             }}>
-            {dateOfBirth !== null || dateOfBirth == "" ? dateOfBirth : "N/A"}
+            {dateOfBirth || "N/A"}
           </Text>
         </View>
         <View style={styles.simpleline}></View>
@@ -415,26 +394,17 @@ const MyProfile = ({ patientId }) => {
               fontSize: 16,
               lineHeight: 19,
               color: "#B3B3B3",
-              // color:colors.primary
-              // backgroundColor:'red'
             }}>
             Marital Status
           </Text>
           <Text
-            style={
-              maritalStatus !== null
-                ? {
-                    fontSize: 18,
-                    lineHeight: 19,
-                    color: colors.primary,
-                    fontWeight: "bold",
-                  }
-                : {
-                    color: "#B3B3B3",
-                  }
-            }>
-            {maritalStatus !== null || maritalStatus == "" ? maritalStatus : "N/A"}
-            {/* {'gg'} */}
+            style={{
+              fontSize: 18,
+              lineHeight: 19,
+              color: maritalStatus ? colors.primary : "#B3B3B3",
+              fontWeight: "bold",
+            }}>
+            {maritalStatus || "N/A"}
           </Text>
         </View>
         <View style={styles.simpleline}></View>
@@ -452,27 +422,20 @@ const MyProfile = ({ patientId }) => {
               fontSize: 16,
               lineHeight: 19,
               color: "#B3B3B3",
-              // color:colors.primary
-              // backgroundColor:'red'
             }}>
             Height
           </Text>
           <Text
-            style={
-              height === null || height === ""
-                ? {
-                    color: "#B3B3B3",
-                  }
-                : {
-                    fontSize: 18,
-                    lineHeight: 19,
-                    color: colors.primary,
-                    fontWeight: "bold",
-                  }
-            }>
-            {height === null || height === "" ? "N/A" : height}
+            style={{
+              fontSize: 18,
+              lineHeight: 19,
+              color: height ? colors.primary : "#B3B3B3",
+              fontWeight: "bold",
+            }}>
+            {height || "N/A"}
           </Text>
         </View>
+        <View style={styles.simpleline}></View>
         <View style={styles.simpleline}></View>
         <View
           style={{
@@ -488,27 +451,17 @@ const MyProfile = ({ patientId }) => {
               fontSize: 16,
               lineHeight: 19,
               color: "#B3B3B3",
-              // color:colors.primary
-              // backgroundColor:'red'
             }}>
             Weight
           </Text>
           <Text
-            style={
-              weight === null || weight === ""
-                ? {
-                    color: "#B3B3B3",
-                  }
-                : {
-                    fontSize: 18,
-                    lineHeight: 19,
-                    color: colors.primary,
-                    fontWeight: "bold",
-                  }
-            }>
-            {/* {(weight !== null || weight!=='')?  weight : "N/A"}
-             */}
-            {weight === null || weight === "" ? "N/A" : weight}
+            style={{
+              fontSize: 18,
+              lineHeight: 19,
+              color: weight ? colors.primary : "#B3B3B3",
+              fontWeight: "bold",
+            }}>
+            {weight || "N/A"}
           </Text>
         </View>
         <View style={styles.simpleline}></View>
@@ -526,25 +479,17 @@ const MyProfile = ({ patientId }) => {
               fontSize: 16,
               lineHeight: 19,
               color: "#B3B3B3",
-              // color:colors.primary
-              // backgroundColor:'red'
             }}>
             Emergency Contact Number
           </Text>
           <Text
-            style={
-              emergencyMobile == null || emergencyMobile === ""
-                ? {
-                    color: "#B3B3B3",
-                  }
-                : {
-                    fontSize: 18,
-                    lineHeight: 19,
-                    color: colors.primary,
-                    fontWeight: "bold",
-                  }
-            }>
-            {emergencyMobile === null || emergencyMobile === "" ? "N/A" : emergencyMobile}
+            style={{
+              fontSize: 18,
+              lineHeight: 19,
+              color: emergencyMobile ? colors.primary : "#B3B3B3",
+              fontWeight: "bold",
+            }}>
+            {emergencyMobile || "N/A"}
           </Text>
         </View>
         <View style={styles.simpleline}></View>
@@ -562,25 +507,17 @@ const MyProfile = ({ patientId }) => {
               fontSize: 16,
               lineHeight: 19,
               color: "#B3B3B3",
-              // color:colors.primary
-              // backgroundColor:'red'
             }}>
             Location
           </Text>
           <Text
-            style={
-              location === null || location === ""
-                ? {
-                    color: "#B3B3B3",
-                  }
-                : {
-                    fontSize: 18,
-                    lineHeight: 19,
-                    color: colors.primary,
-                    fontWeight: "bold",
-                  }
-            }>
-            {location == null || location == "" ? "N/A" : location}
+            style={{
+              fontSize: 18,
+              lineHeight: 19,
+              color: location ? colors.primary : "#B3B3B3",
+              fontWeight: "bold",
+            }}>
+            {location || "N/A"}
           </Text>
         </View>
         <View style={styles.simpleline}></View>
@@ -598,26 +535,17 @@ const MyProfile = ({ patientId }) => {
               fontSize: 16,
               lineHeight: 19,
               color: "#B3B3B3",
-              // color:colors.primary
-              // backgroundColor:'red'
             }}>
             CorpName
           </Text>
           <Text
-            style={
-              corpName === null || corpName === ""
-                ? {
-                    color: "#B3B3B3",
-                  }
-                : {
-                    fontSize: 18,
-                    lineHeight: 19,
-                    color: colors.primary,
-                    fontWeight: "bold",
-                  }
-            }>
-            {corpName === null || corpName == "" ? "N/A" : corpName}
-            {/* {'Uno.Care'} */}
+            style={{
+              fontSize: 18,
+              lineHeight: 19,
+              color: corpName ? colors.primary : "#B3B3B3",
+              fontWeight: "bold",
+            }}>
+            {corpName || "N/A"}
           </Text>
         </View>
 

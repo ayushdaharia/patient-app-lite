@@ -24,6 +24,8 @@ const Layout = () => {
   const router = useRouter();
   const { profileimg, userName } = useContext(ContextPrimary);
   const [modalVisible, setModalVisible] = useState(false);
+
+  console.log({ profileimg, userName });
   const logout = async () => {
     const userId = await AsyncStorage.getItem("USER_ID");
 

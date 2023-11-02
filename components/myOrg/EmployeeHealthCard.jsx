@@ -48,12 +48,12 @@ const EmployeeHealthCard = ({ data }) => {
       isDisplayURL: false,
       displayURL: null,
     },
-    // // {
-    // //   title: "BMI",
-    // //   value: data?.bmi ? `${data?.bmi} kg/m^2` : "N/A",
-    // //   isDisplayURL: false,
-    // //   displayURL: null,
-    // // },
+    {
+      title: "BMI",
+      value: data?.bmi ? `${data?.bmi} kg/m^2` : "N/A",
+      isDisplayURL: false,
+      displayURL: null,
+    },
     // {
     //   title: "Glasses Required",
     //   value: data?.glass ? "Yes" : data?.glass === false ? "No" : "N/A",

@@ -93,6 +93,8 @@ const LogInWithOTP = ({ setIsOTPReceived, mobile, OTPRequest }) => {
       storeData("ID_NEW", dData.id.toString());
       storeData("MOBILE_NO", dData.sub);
 
+      console.log({ dDataddddddd: dData.sub });
+
       authencation(dData.userID);
       getCorpEMPDetails(dData);
 

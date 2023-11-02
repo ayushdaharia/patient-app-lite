@@ -72,7 +72,7 @@ const HelpIndex = () => {
               const image = await ImagePicker.launchCameraAsync({
                 allowsEditing: true,
                 aspect: [4, 3],
-                quality: 1,
+                quality: 0,
               });
 
               console.log({ image });

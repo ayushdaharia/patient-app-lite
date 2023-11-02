@@ -108,7 +108,7 @@ const SetupProfile = ({ familyId = "", patientId }) => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [3, 4],
-      quality: 1,
+      quality: 0,
     });
     if (!result.canceled) {
       const selectedImage = result.assets[0].uri;
@@ -132,7 +132,7 @@ const SetupProfile = ({ familyId = "", patientId }) => {
               const image = await ImagePicker.launchCameraAsync({
                 allowsEditing: true,
                 aspect: [3, 4],
-                quality: 1,
+                quality: 0,
               });
 
               if (!image.canceled) {
