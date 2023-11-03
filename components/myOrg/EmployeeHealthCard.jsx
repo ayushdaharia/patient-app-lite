@@ -153,12 +153,9 @@ const EmployeeHealthCard = ({ data }) => {
   return (
     <SafeAreaView
       style={{
-        // borderWidth: 1,
         borderColor: "#BCBCBC",
-        // width: normalize(381),
         width: screenWidth,
         height: 350,
-        // marginTop: normalize(20),
         flex: 1,
       }}>
       <View
@@ -171,7 +168,6 @@ const EmployeeHealthCard = ({ data }) => {
           backgroundColor: "#fff",
           shadowColor: "#000",
           marginBottom: 10,
-
           shadowOffset: {
             width: 0,
             height: 2,
@@ -183,11 +179,11 @@ const EmployeeHealthCard = ({ data }) => {
         }}>
         <Image
           style={{
-            width: 80,
-            height: 80,
+            width: 70,
+            height: 70,
             marginBottom: 10,
             marginTop: 10,
-            borderRadius: 40,
+            borderRadius: 35,
           }}
           source={imageUrl ? { uri: imageUrl } : icons.profileIcon}
         />
@@ -196,7 +192,7 @@ const EmployeeHealthCard = ({ data }) => {
             fontWeight: "500",
             fontSize: 20,
             color: "#383838",
-            marginBottom: 20,
+            marginBottom: 10,
           }}>
           {name ? name : "N/A"}
         </Text>
@@ -206,7 +202,6 @@ const EmployeeHealthCard = ({ data }) => {
             flexWrap: "wrap",
             flexDirection: "row",
             justifyContent: "space-between",
-            // marginHorizontal:normalize(10)
             marginLeft: 10,
           }}>
           <PersonDescription source={icons.genderIcon} description={gender} />
@@ -220,8 +215,7 @@ const EmployeeHealthCard = ({ data }) => {
             borderWidth: 0.5,
             width: "90%",
             alignSelf: "center",
-            marginTop: 15,
-            // marginBottom: 15,
+            marginTop: 10,
             borderColor: "#BCBCBC",
           }}></View>
 
@@ -232,24 +226,10 @@ const EmployeeHealthCard = ({ data }) => {
           <MiddleComponent title={"Emp. ID"} value={empId ? empId : "N/A"} />
         </View>
       </View>
-      <View
-        style={{
-          borderWidth: 0.5,
-          backgroundColor: "#fff",
-          borderColor: "#D4D4D4",
-          shadowOffset: {
-            width: 0,
-            height: 2,
-          },
-          shadowOpacity: 0.25,
-          shadowRadius: 3.84,
-
-          elevation: 3,
-        }}>
+      <View style={{}}>
         <View
           style={{
-            width: 350,
-            height: 35,
+            height: 30,
             borderRadius: 5,
             backgroundColor: "#E0F0FF",
             justifyContent: "flex-start",
@@ -257,22 +237,21 @@ const EmployeeHealthCard = ({ data }) => {
             alignItems: "center",
             flexDirection: "row",
             marginHorizontal: 10,
-            marginTop: 5,
+            // marginTop: 5,
           }}>
           <View
             style={{
               width: 3,
               backgroundColor: "#0045B9",
-              height: 27,
+              height: 23,
               borderRadius: 2,
               marginLeft: 7,
             }}></View>
-          <Text style={{ fontWeight: "600", fontSize: 20, color: "#0045B9" }}>{newdate}</Text>
+          <Text style={{ fontWeight: "600", fontSize: 16, color: "#0045B9" }}>{newdate}</Text>
         </View>
 
         <View
           style={{
-            marginTop: 6,
             marginHorizontal: 10,
             height: 300,
             marginBottom: 20,
@@ -317,7 +296,7 @@ const EmployeeHealthCard = ({ data }) => {
             </View>
           </View>
           <ScrollView style={{ width: "100%" }}>
-            <View style={{ marginBottom: 50 }}>
+            <View style={{ marginBottom: 60 }}>
               {displayVitals.map((val, index) => (
                 <View
                   key={index}
@@ -474,16 +453,11 @@ const PersonalBmi = (props) => {
 const styles = StyleSheet.create({
   rowView: {
     flexDirection: "row",
-    // backgroundColor: "red",
     width: "100%",
     marginTop: 10,
     justifyContent: "space-between",
     flexWrap: "wrap",
     marginLeft: 18,
-    // alignItems:'center',
-    // justifyContent:"space-between",
-    // paddingHorizontal: normalize(8),
-    // borderWidth:1,
   },
   keyText: {
     color: "#6B6B6B",
