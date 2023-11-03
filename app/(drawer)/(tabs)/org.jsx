@@ -38,7 +38,8 @@ const Org = () => {
 
   console.log({ healthData });
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#FFF" }}>
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: "#FFF", justifyContent: "center", alignItems: "center" }}>
       <Stack.Screen
         options={{
           headerStyle: { backgroundColor: COLORS.lightWhite },
@@ -72,13 +73,14 @@ const Org = () => {
           headerTitle: "",
         }}
       />
-      <ScrollView>
-        {healthData === "" ? (
-          <Text style={styles.noHealthText}>{"No Corp Data Found"}</Text>
-        ) : (
+
+      {healthData === "" ? (
+        <Text style={styles.noHealthText}>{"No Corp Data Found"}</Text>
+      ) : (
+        <ScrollView>
           <EmployeeHealthCard data={healthData} />
-        )}
-      </ScrollView>
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 };
