@@ -238,9 +238,9 @@ const RaiseTicket = () => {
               <TouchableOpacity>
                 <Button
                   onPress={() => handleRaiseTicket()}
-                  disabled={remark == "" ? true : false}
+                  disabled={remark === "" && files.length === 0 ? true : false}
                   style={{
-                    backgroundColor: remark == "" ? COLORS.gray : "#127DDD",
+                    backgroundColor: remark === "" && files.length === 0 ? COLORS.gray : "#127DDD",
                     width: 100,
                   }}>
                   <Text style={{ color: COLORS.white, fontSize: SIZES.medium }}>Save</Text>
