@@ -40,16 +40,15 @@ const MyOrgIndex = () => {
         justifyContent: "center",
         alignItems: "center",
       }}>
-      <View style={{ marginTop: 50 }}>
-        {healthData === "" ? (
-          <Text style={styles.noHealthText}>{"No Corp Data Found"}</Text>
-        ) : (
-          <Fragment>
-            <CaseConstructionHeader imageurl={corpLogo} />
-            <EmployeeHealthCard data={healthData} />
-          </Fragment>
-        )}
-      </View>
+      {/* <View style={{ marginTop: 50 }}> */}
+      {healthData === "" ? (
+        <Text style={styles.noHealthText}>{"No Corp Data Found"}</Text>
+      ) : (
+        <Fragment>
+          <EmployeeHealthCard data={healthData} />
+        </Fragment>
+      )}
+      {/* </View> */}
     </SafeAreaView>
   );
 };

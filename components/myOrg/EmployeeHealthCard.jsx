@@ -155,7 +155,6 @@ const EmployeeHealthCard = ({ data }) => {
       style={{
         borderColor: "#BCBCBC",
         width: screenWidth,
-        height: 350,
         flex: 1,
       }}>
       <View

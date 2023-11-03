@@ -5,12 +5,14 @@ import {
   Image,
   Keyboard,
   Linking,
+  Pressable,
+  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import { COLORS, SIZES, icons } from "../../../constants";
+import { COLORS, SIZES, icons, images } from "../../../constants";
 
 const Layout = () => {
   const [keyboardOpen, setKeyboardOpen] = useState(false);
@@ -60,6 +62,7 @@ const Layout = () => {
           borderTopLeftRadius: 25,
           borderTopRightRadius: 25,
         },
+        tabBarHideOnKeyboard: true,
       }}>
       <Tabs.Screen
         name="home"
@@ -106,7 +109,7 @@ const Layout = () => {
                   width: 60,
                   height: 60,
                   borderRadius: 30,
-                  marginBottom: keyboardOpen ? 0 : 25,
+                  marginBottom: keyboardOpen ? -10 : 25,
                 }}>
                 <Image source={icons.icon24by7} style={{ height: 50, width: 50 }} />
               </View>
@@ -133,7 +136,6 @@ const Layout = () => {
         name="org"
         options={{
           title: "",
-          headerShown: false,
           tabBarIcon: ({ color, focused }) => (
             <View style={{ justifyContent: "center", alignItems: "center", top: 5 }}>
               <Image
